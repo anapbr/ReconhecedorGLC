@@ -33,7 +33,7 @@ public class Arvore {
 			if (estrutura[posicao+1] == null) {
 				cadeiaDaArvore = cadeiaDaArvore.concat(estrutura[posicao]); // terminal do filho esquerdo
 				if (cadeiaDaArvore.equals(cadeia.substring(0, cadeiaDaArvore.length()-1))) {
-					return null;
+					return "Cadeia Incorreta";
 				}
 			} else {
 				return "Derivacao Incompleta";
@@ -49,14 +49,20 @@ public class Arvore {
 
 		} while (posicao > 1);
 
-		return cadeiaDaArvore;
-
+		// Trata casos onde a cadeiaGerada é uma substring da cadeia pesquisada
+		if (cadeia.equals(cadeiaDaArvore)) {
+			return cadeiaDaArvore;
+		} else {
+			return "Cadeia Incorreta";
+		}
+		
 	}
 	
 	private Integer desceRamoAEsquerda(Integer posicao) {
 		String[] estrutura = getEstrutura();
 		Integer tamanhoArvore = estrutura.length;
-		while (posicao < tamanhoArvore) {
+		
+		while (posicao < tamanhoArvore-1) {
 			if (posicao % 2 == 0 && estrutura[posicao + 1] == null) {
 				// Ultimo filho à esquerda do ramo pesquisado
 				return posicao;
