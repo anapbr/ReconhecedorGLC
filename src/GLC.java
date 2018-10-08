@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GLC {
 
@@ -32,11 +34,47 @@ public class GLC {
 		this.producoes = producoes;
 	}
 	
-	public Arvore reconheceCadeia (String estado, GLC glc, String cadeia) {
+	public Arvore reconheceCadeia (Arvore arvore, GLC glc, String cadeia) {
 		
+		String cadeiaGerada = arvore.getCadeiaGerada(cadeia);
 		
+		if (cadeiaGerada.equals(cadeia)) {
+			return arvore;
+		} else {
+			
+			derivaArvore(arvore);
+			
+		}
+				
+		System.out.println(cadeiaGerada);
+				
+		return arvore;
+	}
+	private void derivaArvore(Arvore arvore) {
 		
-		return null;
+		Integer tamanhoArvore = arvore.getEstrutura().length;
+		String[] estruturaArvore = arvore.getEstrutura();
+		String[] estruturaNovaArvore = new String[tamanhoArvore+2];
+		
+		Queue<Arvore> filaArvores = new LinkedList<Arvore>();
+		
+		for (Producao producao : producoes) {
+			
+			if (producao.getLhs().equals(estruturaArvore[tamanhoArvore-1])) {
+				Arvore novaArvore = new Arvore();
+				estruturaNovaArvore = estruturaArvore; 
+				estruturaNovaArvore[tamanhoArvore-2]=producao.getRhs()[0];
+				estruturaNovaArvore[tamanhoArvore-1]=producao.getRhs()[1];
+				
+				novaArvore.setEstrutura(estruturaNovaArvore);
+				
+				// Adicionar à fila
+				estruturaNovaArvore.toString();
+					
+			}
+			
+		}
+		
 	} 
 	
 }

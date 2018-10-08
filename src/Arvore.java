@@ -2,8 +2,6 @@ public class Arvore {
 
 	private String[] estrutura;
 
-	private String cadeia = new String();
-
 	public String[] getEstrutura() {
 		return estrutura;
 	}
@@ -12,16 +10,11 @@ public class Arvore {
 		this.estrutura = estrutura;
 	}
 
-	public String getCadeia() {
-		return cadeia;
-	}
-
-	public String getCadeiaGerada() {
+	public String getCadeiaGerada(String cadeia) {
 
 		Integer posicao = 1;
 		String cadeiaDaArvore = new String();
 		String[] estrutura = getEstrutura();
-		String cadeia = getCadeia();
 
 		do {
 			posicao = desceRamoAEsquerda(posicao);
@@ -32,13 +25,14 @@ public class Arvore {
 			// Se o filho direito é nulo, então seu irmão (à esquerda) é um terminal
 			if (estrutura[posicao+1] == null) {
 				cadeiaDaArvore = cadeiaDaArvore.concat(estrutura[posicao]); // terminal do filho esquerdo
-				if (cadeiaDaArvore.equals(cadeia.substring(0, cadeiaDaArvore.length()-1))) {
+				if (cadeiaDaArvore.equals(cadeia.substring(0, cadeiaDaArvore.length()-1))) { // REVER
 					return "Cadeia Incorreta";
 				}
 			} else {
 				return "Derivacao Incompleta";
 			}
 
+			// Retorna ao primeiro filho à direita.
 			posicao/=2;
 			while (posicao%2==1) {
 				posicao = (posicao-1)/2;
@@ -74,10 +68,6 @@ public class Arvore {
 		}
 
 		return posicao / 2;
-	}
-
-	public void setCadeia(String cadeia) {
-		this.cadeia = cadeia;
 	}
 
 }
