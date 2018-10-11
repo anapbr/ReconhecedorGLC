@@ -21,8 +21,6 @@ public class GLC {
 	}
 	
 	public void setElementoFila(Arvore arvore) {
-		System.out.println("fila "+fila);
-		System.out.println("arvore "+arvore);
 		getFila().add(arvore);
 	}
 	
@@ -87,14 +85,18 @@ public class GLC {
 	}
 	
 	private void derivaArvore(Arvore arvore) {
-		
+
 		Integer tamanhoArvore = arvore.getEstrutura().length;
 		String[] estruturaArvore = arvore.getEstrutura();
-		String[] estruturaNovaArvore = new String[tamanhoArvore+2];
+		
+		Integer j = 0;
 		
 		for (Producao producao : producoes) {
 			
+			String[] estruturaNovaArvore = new String[tamanhoArvore+2];
+				
 			if (producao.getLhs().equals(estruturaArvore[tamanhoArvore/2])) {
+				j++;
 				Arvore novaArvore = new Arvore();
 				// ---------------------------------------------------
 				// SETA NOVA ARVORE
@@ -112,6 +114,25 @@ public class GLC {
 				arvore=novaArvore;
 			}
 			
+		}
+		
+		if (j==0) {
+
+			String[] estruturaNovaArvore = new String[tamanhoArvore+2];
+			
+			Arvore novaArvore = new Arvore();
+			// ---------------------------------------------------
+			// SETA NOVA ARVORE
+			for (int i=0; i<tamanhoArvore; i++) {
+				estruturaNovaArvore[i]=estruturaArvore[i];
+			}
+			
+			estruturaNovaArvore[tamanhoArvore]=null;
+			estruturaNovaArvore[tamanhoArvore+1]=null;
+			
+			// Adicionar à fila
+			setElementoFila(novaArvore);
+			arvore=novaArvore;
 		}
 		
 	}
