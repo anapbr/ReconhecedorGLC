@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class GLC {
@@ -8,7 +9,29 @@ public class GLC {
 	private ArrayList<String> variaveis;
 	private ArrayList<String> terminais;
 	private ArrayList<Producao> producoes;
+	private List<Arvore> fila = new ArrayList<Arvore>();
 	
+	public Arvore getElementoFila () {
+		
+		Arvore arvore = getFila().get(0);
+		
+		getFila().remove(0);
+		
+		return arvore;
+	}
+	
+	public void setElementoFila(Arvore arvore) {
+		System.out.println("fila "+fila);
+		System.out.println("arvore "+arvore);
+		getFila().add(arvore);
+	}
+	
+	public List<Arvore> getFila() {
+		return fila;
+	}
+	public void setFila(List<Arvore> fila) {
+		this.fila = fila;
+	}
 	public String getEstadoInicial() {
 		return estadoInicial;
 	}
@@ -36,45 +59,61 @@ public class GLC {
 	
 	public Arvore reconheceCadeia (Arvore arvore, GLC glc, String cadeia) {
 		
-		String cadeiaGerada = arvore.getCadeiaGerada(cadeia);
+		String resultado = arvore.getCadeiaGerada(cadeia);
 		
-		if (cadeiaGerada.equals(cadeia)) {
-			return arvore;
+		System.out.println(resultado);
+		
+		if (resultado.equals("OK")) {
+			return arvore; // Encontrada a árvore que deriva a cadeia pesquisada
 		} else {
 			
-			derivaArvore(arvore);
+			if (resultado.equals("DERIVAR")) {
+				
+				derivaArvore(arvore);
+					
+			}
+			
+			if (getFila().size()>0) {
+				arvore = getElementoFila();
+				reconheceCadeia(arvore, glc, cadeia);
+			} else {
+				return null;
+			}
 			
 		}
-				
-		System.out.println(cadeiaGerada);
-				
-		return arvore;
+		
+		return null;
+		
 	}
+	
 	private void derivaArvore(Arvore arvore) {
 		
 		Integer tamanhoArvore = arvore.getEstrutura().length;
 		String[] estruturaArvore = arvore.getEstrutura();
 		String[] estruturaNovaArvore = new String[tamanhoArvore+2];
 		
-		Queue<Arvore> filaArvores = new LinkedList<Arvore>();
-		
 		for (Producao producao : producoes) {
 			
-			if (producao.getLhs().equals(estruturaArvore[tamanhoArvore-1])) {
+			if (producao.getLhs().equals(estruturaArvore[tamanhoArvore/2])) {
 				Arvore novaArvore = new Arvore();
-				estruturaNovaArvore = estruturaArvore; 
-				estruturaNovaArvore[tamanhoArvore-2]=producao.getRhs()[0];
-				estruturaNovaArvore[tamanhoArvore-1]=producao.getRhs()[1];
+				// ---------------------------------------------------
+				// SETA NOVA ARVORE
+				for (int i=0; i<tamanhoArvore; i++) {
+					estruturaNovaArvore[i]=estruturaArvore[i];
+				}
+				estruturaNovaArvore[tamanhoArvore]=producao.getRhs()[0];
+				estruturaNovaArvore[tamanhoArvore+1]=producao.getRhs()[1];
+				// ---------------------------------------------------
 				
 				novaArvore.setEstrutura(estruturaNovaArvore);
 				
 				// Adicionar à fila
-				estruturaNovaArvore.toString();
-					
+				setElementoFila(novaArvore);
+				arvore=novaArvore;
 			}
 			
 		}
 		
-	} 
+	}
 	
 }

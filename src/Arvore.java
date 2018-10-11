@@ -9,46 +9,62 @@ public class Arvore {
 	public void setEstrutura(String[] estrutura) {
 		this.estrutura = estrutura;
 	}
-
+	
 	public String getCadeiaGerada(String cadeia) {
 
 		Integer posicao = 1;
 		String cadeiaDaArvore = new String();
-		String[] estrutura = getEstrutura();
+		String[] estruturaDaArvore = getEstrutura();
 
 		do {
+			
 			posicao = desceRamoAEsquerda(posicao);
 
 			// ---------------------------------------------------------------------
 			// Busca conteudo do filho direito
 			// ---------------------------------------------------------------------
 			// Se o filho direito é nulo, então seu irmão (à esquerda) é um terminal
-			if (estrutura[posicao+1] == null) {
-				cadeiaDaArvore = cadeiaDaArvore.concat(estrutura[posicao]); // terminal do filho esquerdo
-				if (cadeiaDaArvore.equals(cadeia.substring(0, cadeiaDaArvore.length()-1))) { // REVER
-					return "Cadeia Incorreta";
+			if (estruturaDaArvore[posicao+1] == null) {
+				cadeiaDaArvore = cadeiaDaArvore.concat(estruturaDaArvore[posicao]); // terminal do filho esquerdo
+				// Rever essa negação. Parece que está dando erro
+				if (cadeiaDaArvore.equals(cadeia.substring(0, cadeiaDaArvore.length()-1))) { 
+					// Se chegar aqui, então a substring gerada não corresponde à cadeia pesquisada. 
+					// Logo, não é necessário perder mais tempo com essa árvore e seus desdobramentos 
+					// e ela deve ser descartada
+					return "DESCARTAR"; 
 				}
 			} else {
-				return "Derivacao Incompleta";
+				return "DERIVAR"; // Derivacao Incompleta: arvore candidata até o momento
 			}
-
+			
+			// ---------------------------------------------------------------------
 			// Retorna ao primeiro filho à direita.
+			// ---------------------------------------------------------------------
 			posicao/=2;
 			while (posicao%2==1) {
 				posicao = (posicao-1)/2;
 			}
-			posicao++;
-			
+			// ---------------------------------------------------------------------
+			// Após retornar ao filho direito, passa ao filho esquerdo para iniciar
+			// nova descida no ramo à esquerda através de desceRamoAEsquerda(posicao)
 			// ---------------------------------------------------------------------
 
+			posicao++;			
+			
 		} while (posicao > 1);
-
-		// Trata casos onde a cadeiaGerada é uma substring da cadeia pesquisada
+		
+		// ---------------------------------------------------------------------
+		// Se chegamos até aqui, então não foram identificadas variáveis 
+		// pendentes de derivação
+		// ---------------------------------------------------------------------
+		// Verifica se a cadeia produzida pela árvore é a cadeia procurada
+		// ---------------------------------------------------------------------
 		if (cadeia.equals(cadeiaDaArvore)) {
-			return cadeiaDaArvore;
+			return "OK"; // Árvore encontrada
 		} else {
-			return "Cadeia Incorreta";
+			return "DESCARTAR"; // Árvore não gera a cadeia
 		}
+		// ---------------------------------------------------------------------
 		
 	}
 	

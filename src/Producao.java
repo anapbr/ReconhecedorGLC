@@ -3,6 +3,11 @@ public class Producao {
 	private String lhs;
 	private String[] rhs = new String[2];
 	
+	public Producao (String lhs, String[] rhs) {
+		setLhs(lhs);
+		setRhs(rhs);
+	}
+	
 	public String getLhs() {
 		return lhs;
 	}
